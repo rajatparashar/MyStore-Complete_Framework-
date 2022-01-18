@@ -26,4 +26,8 @@ public class HomePage extends BaseClass {
 		return Action.isDisplayed(driver, orderHistoryAndDetails);
 	}
 
+	public String getCurrentUrl() {
+		return driver.getCurrentUrl();
+	}
+
 }

@@ -28,7 +28,7 @@ public class OrderPage extends BaseClass {
 	}
 
 	public double getTotalPrice() {
-		String result = unitPrice.getText();
+		String result = totalPrice.getText();
 		double totalPrice = Double.parseDouble("" + new StringBuilder(result).replace(0, 1, ""));
 		return totalPrice;
 	}
