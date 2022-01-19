@@ -4,12 +4,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
+
+import org.apache.log4j.xml.DOMConfigurator;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.opera.OperaDriver;
+import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
+
 import com.mystore.actiondriver.Action;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -17,7 +22,12 @@ public class BaseClass {
 	public static Properties prop;
 	public static WebDriver driver;
 
-	@BeforeTest
+	@BeforeSuite(groups= {"Smoke","Sanity","Regression"})
+	public void beforeSuite() {
+		DOMConfigurator.configure("log4j.xml");
+	}
+
+	@BeforeTest(groups= {"Smoke","Sanity","Regression"})
 	public void loadConfig() {
 		prop = new Properties();
 		try {
@@ -34,10 +44,9 @@ public class BaseClass {
 		}
 	}
 
-	public static void launchApp() {
-//		WebDriverManager.chromedriver().setup();
-		String browserName = prop.getProperty("browser");
-
+	
+	public static void launchApp(String browserName) {
+//		String browserName = prop.getProperty("browser");
 		if (browserName.equals("Chrome")) {
 			WebDriverManager.chromedriver().setup();
 			driver = new ChromeDriver();

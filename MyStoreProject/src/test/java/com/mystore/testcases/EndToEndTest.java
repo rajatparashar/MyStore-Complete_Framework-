@@ -6,20 +6,32 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import com.mystore.base.BaseClass;
+import com.mystore.pageobjects.AccountCreationPage;
 import com.mystore.pageobjects.AddToCartPage;
+import com.mystore.pageobjects.AddressPage;
 import com.mystore.pageobjects.HomePage;
 import com.mystore.pageobjects.IndexPage;
 import com.mystore.pageobjects.LoginPage;
+import com.mystore.pageobjects.OrderConfirmationPage;
 import com.mystore.pageobjects.OrderPage;
+import com.mystore.pageobjects.OrderSummaryPage;
+import com.mystore.pageobjects.PaymentPage;
 import com.mystore.pageobjects.SearchResultPage;
+import com.mystore.pageobjects.ShippingPage;
 
-public class OrderPageTest extends BaseClass {
+public class EndToEndTest extends BaseClass {
 	IndexPage indexPage;
 	LoginPage loginPage;
 	HomePage homePage;
+	AccountCreationPage accountCreationPage;
 	SearchResultPage searchResultPage;
 	AddToCartPage addToCartPage;
 	OrderPage orderPage;
+	AddressPage addressPage;
+	ShippingPage shippingPage;
+	PaymentPage paymentPage;
+	OrderSummaryPage orderSummaryPage;
+	OrderConfirmationPage orderConfirmationPage;
 
 	@Parameters("browser")
 	@BeforeMethod(groups= {"Smoke","Sanity","Regression"})
@@ -33,7 +45,7 @@ public class OrderPageTest extends BaseClass {
 	}
 
 	@Test(groups="Regression")
-	public void verifyTotalPrice() {
+	public void endToEndTest() {
 		indexPage = new IndexPage();
 		searchResultPage = indexPage.searchProduct("t-shirt");
 		addToCartPage = searchResultPage.clickOnProduct();
@@ -41,9 +53,15 @@ public class OrderPageTest extends BaseClass {
 		addToCartPage.selectSize("M");
 		addToCartPage.clickAddToCartButton();
 		orderPage = addToCartPage.clickProceedToCheckout();
-		double unitPrice = orderPage.getUnitPrice();
-		double totalPrice = orderPage.getTotalPrice();
-		double totalExpectedPrice = (unitPrice * 3) + 2;
-		Assert.assertEquals(totalPrice, totalExpectedPrice);
+		loginPage = orderPage.clickOnCheckOut();
+		addressPage = loginPage.loginToLandAddressPage(prop.getProperty("username"), prop.getProperty("password"));
+		shippingPage = addressPage.checkOut();
+		shippingPage.clickTermsCheckbox();
+		paymentPage = shippingPage.clickOnProceedToCheckout();
+		orderSummaryPage = paymentPage.clickOnPaymentMethod();
+		orderConfirmationPage = orderSummaryPage.clickConfirmOrderButton();
+		String actualMessage = orderConfirmationPage.validateConfirmMessage();
+		String expectedMessage = "Your order on My Store is complete.";
+		Assert.assertEquals(actualMessage, expectedMessage);
 	}
 }

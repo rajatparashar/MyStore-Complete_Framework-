@@ -3,6 +3,7 @@ package com.mystore.testcases;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import com.mystore.base.BaseClass;
 import com.mystore.pageobjects.HomePage;
@@ -16,17 +17,18 @@ public class SearchResultPageTest extends BaseClass {
 	HomePage homePage;
 	SearchResultPage searchResultPage;
 	
-	@BeforeMethod
-	public void setUp() {
-		launchApp();
+	@Parameters("browser")
+	@BeforeMethod(groups= {"Smoke","Sanity","Regression"})
+	public void setUp(String browser) {
+		launchApp(browser);
 	}
 
-	@AfterMethod
+	@AfterMethod(groups= {"Smoke","Sanity","Regression"})
 	public void tearDown() {
 		driver.quit();
 	}
 
-	@Test
+	@Test(groups="Smoke")
 	public void productAvailabilityTest() {
 		indexPage = new IndexPage();
 		searchResultPage = indexPage.searchProduct("t-shirt");

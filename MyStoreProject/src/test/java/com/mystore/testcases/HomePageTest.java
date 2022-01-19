@@ -3,6 +3,7 @@ package com.mystore.testcases;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import com.mystore.base.BaseClass;
 import com.mystore.pageobjects.HomePage;
@@ -14,17 +15,18 @@ public class HomePageTest extends BaseClass {
 	LoginPage loginPage;
 	HomePage homePage;
 
-	@BeforeMethod
-	public void setUp() {
-		launchApp();
+	@Parameters("browser")
+	@BeforeMethod(groups= {"Smoke","Sanity","Regression"})
+	public void setUp(String browser) {
+		launchApp(browser);
 	}
 
-	@AfterMethod
+	@AfterMethod(groups= {"Smoke","Sanity","Regression"})
 	public void tearDown() {
 		driver.quit();
 	}
 	
-	@Test
+	@Test(groups="Smoke")
 	public void orderHistoryAndDetailsTest() {
 		indexPage = new IndexPage();
 		loginPage = indexPage.clickOnSignIn();
@@ -33,7 +35,7 @@ public class HomePageTest extends BaseClass {
 		Assert.assertTrue(result);
 	}
 
-	@Test
+	@Test(groups="Smoke")
 	public void wishListTest() {
 		indexPage = new IndexPage();
 		loginPage = indexPage.clickOnSignIn();
